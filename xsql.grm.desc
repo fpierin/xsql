@@ -1,0 +1,1428 @@
+
+state 0:
+
+	start : . def_tipo def_var bloco 
+
+	STRUCT	shift 2
+
+	start	goto 124
+	def_tipo	goto 1
+
+	.	error
+
+
+state 1:
+
+	start : def_tipo . def_var bloco 
+
+	VAR	shift 4
+
+	def_var	goto 3
+
+	.	error
+
+
+state 2:
+
+	def_tipo : STRUCT . IDENT CHAVE_E campos CHAVE_D 
+	def_tipo : STRUCT . IDENT CHAVE_E campos CHAVE_D def_tipo 
+
+	IDENT	shift 5
+
+
+	.	error
+
+
+state 3:
+
+	start : def_tipo def_var . bloco 
+
+	WHILE	shift 21
+	IF	shift 20
+	SELECT	shift 19
+	DELETE	shift 18
+	UPDATE	shift 17
+	CREATE	shift 16
+	IDENT	shift 15
+
+	bloco	goto 14
+	comando	goto 13
+	atrib	goto 12
+	while_com	goto 11
+	ifelse	goto 10
+	update	goto 9
+	delete	goto 8
+	create	goto 7
+	select	goto 6
+
+	.	error
+
+
+state 4:
+
+	def_var : VAR . declaracao PONT_VIRG 
+	def_var : VAR . declaracao PONT_VIRG def_var 
+
+	IDENT	shift 23
+
+	declaracao	goto 22
+
+	.	error
+
+
+state 5:
+
+	def_tipo : STRUCT IDENT . CHAVE_E campos CHAVE_D 
+	def_tipo : STRUCT IDENT . CHAVE_E campos CHAVE_D def_tipo 
+
+	CHAVE_E	shift 24
+
+
+	.	error
+
+
+state 6:
+
+	comando : select .  (reduce by rule 18)
+
+
+
+	.	reduce by rule 18
+
+
+state 7:
+
+	comando : create .  (reduce by rule 19)
+
+
+
+	.	reduce by rule 19
+
+
+state 8:
+
+	comando : delete .  (reduce by rule 21)
+
+
+
+	.	reduce by rule 21
+
+
+state 9:
+
+	comando : update .  (reduce by rule 20)
+
+
+
+	.	reduce by rule 20
+
+
+state 10:
+
+	comando : ifelse .  (reduce by rule 17)
+
+
+
+	.	reduce by rule 17
+
+
+state 11:
+
+	comando : while_com .  (reduce by rule 16)
+
+
+
+	.	reduce by rule 16
+
+
+state 12:
+
+	comando : atrib .  (reduce by rule 15)
+
+
+
+	.	reduce by rule 15
+
+
+state 13:
+
+	bloco : comando . PONT_VIRG 
+	bloco : comando . PONT_VIRG bloco 
+
+	PONT_VIRG	shift 25
+
+
+	.	error
+
+
+state 14:
+
+	start : def_tipo def_var bloco .  (reduce by rule 0)
+
+
+
+	.	reduce by rule 0
+
+
+state 15:
+
+	atrib : IDENT . IGUAL exp 
+	atrib : IDENT . IGUAL select 
+
+	IGUAL	shift 26
+
+
+	.	error
+
+
+state 16:
+
+	create : CREATE . TABLE STRING AS IDENT 
+
+	TABLE	shift 27
+
+
+	.	error
+
+
+state 17:
+
+	update : UPDATE . IDENT SET atribuicoes where_exp 
+
+	IDENT	shift 28
+
+
+	.	error
+
+
+state 18:
+
+	delete : DELETE . FROM IDENT where_exp 
+
+	FROM	shift 29
+
+
+	.	error
+
+
+state 19:
+
+	select : SELECT . atributos FROM IDENT where_exp 
+	select : SELECT . MULT FROM IDENT where_exp 
+
+	MULT	shift 40
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 33
+
+	atributos	goto 32
+	atributo	goto 31
+	exp	goto 30
+
+	.	error
+
+
+state 20:
+
+	ifelse : IF . exp CHAVE_E bloco CHAVE_D 
+	ifelse : IF . exp CHAVE_E bloco CHAVE_D ELSE CHAVE_E bloco CHAVE_D 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	exp	goto 41
+
+	.	error
+
+
+state 21:
+
+	while_com : WHILE . exp CHAVE_E bloco CHAVE_D 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	exp	goto 43
+
+	.	error
+
+
+state 22:
+
+	def_var : VAR declaracao . PONT_VIRG 
+	def_var : VAR declaracao . PONT_VIRG def_var 
+
+	PONT_VIRG	shift 44
+
+
+	.	error
+
+
+state 23:
+
+	declaracao : IDENT . DOIS_PONT tipoS 
+	declaracao : IDENT . DOIS_PONT IDENT 
+
+	DOIS_PONT	shift 45
+
+
+	.	error
+
+
+state 24:
+
+	def_tipo : STRUCT IDENT CHAVE_E . campos CHAVE_D 
+	def_tipo : STRUCT IDENT CHAVE_E . campos CHAVE_D def_tipo 
+
+	IDENT	shift 47
+
+	campos	goto 46
+
+	.	error
+
+
+state 25:
+
+	bloco : comando PONT_VIRG .  (reduce by rule 13)
+	bloco : comando PONT_VIRG . bloco 
+
+	WHILE	shift 21
+	IF	shift 20
+	SELECT	shift 19
+	DELETE	shift 18
+	UPDATE	shift 17
+	CREATE	shift 16
+	IDENT	shift 15
+
+	bloco	goto 48
+	comando	goto 13
+	atrib	goto 12
+	while_com	goto 11
+	ifelse	goto 10
+	update	goto 9
+	delete	goto 8
+	create	goto 7
+	select	goto 6
+
+	.	reduce by rule 13
+
+
+state 26:
+
+	atrib : IDENT IGUAL . exp 
+	atrib : IDENT IGUAL . select 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	SELECT	shift 19
+	IDENT	shift 42
+
+	select	goto 50
+	exp	goto 49
+
+	.	error
+
+
+state 27:
+
+	create : CREATE TABLE . STRING AS IDENT 
+
+	STRING	shift 51
+
+
+	.	error
+
+
+state 28:
+
+	update : UPDATE IDENT . SET atribuicoes where_exp 
+
+	SET	shift 52
+
+
+	.	error
+
+
+state 29:
+
+	delete : DELETE FROM . IDENT where_exp 
+
+	IDENT	shift 53
+
+
+	.	error
+
+
+state 30:
+
+	atributo : exp . AS IDENT 
+
+	AS	shift 54
+
+
+	.	error
+
+
+state 31:
+
+	atributos : atributo .  (reduce by rule 49)
+	atributos : atributo . VIRG atributos 
+
+	VIRG	shift 55
+
+
+	.	reduce by rule 49
+
+
+state 32:
+
+	select : SELECT atributos . FROM IDENT where_exp 
+
+	FROM	shift 56
+
+
+	.	error
+
+
+state 33:
+
+	atributo : IDENT .  (reduce by rule 51)
+	exp : IDENT .  (reduce by rule 27)
+
+	VIRG	reduce by rule 51
+	FROM	reduce by rule 51
+	AS	reduce by rule 27
+
+
+	.	error
+
+
+state 34:
+
+	exp : BOOL .  (reduce by rule 33)
+
+
+
+	.	reduce by rule 33
+
+
+state 35:
+
+	exp : STRING .  (reduce by rule 32)
+
+
+
+	.	reduce by rule 32
+
+
+state 36:
+
+	exp : REAL .  (reduce by rule 31)
+
+
+
+	.	reduce by rule 31
+
+
+state 37:
+
+	exp : INT .  (reduce by rule 30)
+
+
+
+	.	reduce by rule 30
+
+
+state 38:
+
+	exp : PAREN_E . exp PAREN_D op_bin PAREN_E exp PAREN_D 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	exp	goto 57
+
+	.	error
+
+
+state 39:
+
+	exp : NOT . PAREN_E exp PAREN_D 
+
+	PAREN_E	shift 58
+
+
+	.	error
+
+
+state 40:
+
+	select : SELECT MULT . FROM IDENT where_exp 
+
+	FROM	shift 59
+
+
+	.	error
+
+
+state 41:
+
+	ifelse : IF exp . CHAVE_E bloco CHAVE_D 
+	ifelse : IF exp . CHAVE_E bloco CHAVE_D ELSE CHAVE_E bloco CHAVE_D 
+
+	CHAVE_E	shift 60
+
+
+	.	error
+
+
+state 42:
+
+	exp : IDENT .  (reduce by rule 27)
+
+
+
+	.	reduce by rule 27
+
+
+state 43:
+
+	while_com : WHILE exp . CHAVE_E bloco CHAVE_D 
+
+	CHAVE_E	shift 61
+
+
+	.	error
+
+
+state 44:
+
+	def_var : VAR declaracao PONT_VIRG .  (reduce by rule 9)
+	def_var : VAR declaracao PONT_VIRG . def_var 
+
+	VAR	shift 4
+
+	def_var	goto 62
+
+	.	reduce by rule 9
+
+
+state 45:
+
+	declaracao : IDENT DOIS_PONT . tipoS 
+	declaracao : IDENT DOIS_PONT . IDENT 
+
+	T_INT	shift 68
+	T_REAL	shift 67
+	T_STRING	shift 66
+	T_BOOL	shift 65
+	IDENT	shift 64
+
+	tipoS	goto 63
+
+	.	error
+
+
+state 46:
+
+	def_tipo : STRUCT IDENT CHAVE_E campos . CHAVE_D 
+	def_tipo : STRUCT IDENT CHAVE_E campos . CHAVE_D def_tipo 
+
+	CHAVE_D	shift 69
+
+
+	.	error
+
+
+state 47:
+
+	campos : IDENT . DOIS_PONT tipoS PONT_VIRG 
+	campos : IDENT . DOIS_PONT tipoS PONT_VIRG campos 
+
+	DOIS_PONT	shift 70
+
+
+	.	error
+
+
+state 48:
+
+	bloco : comando PONT_VIRG bloco .  (reduce by rule 14)
+
+
+
+	.	reduce by rule 14
+
+
+state 49:
+
+	atrib : IDENT IGUAL exp .  (reduce by rule 22)
+
+
+
+	.	reduce by rule 22
+
+
+state 50:
+
+	atrib : IDENT IGUAL select .  (reduce by rule 23)
+
+
+
+	.	reduce by rule 23
+
+
+state 51:
+
+	create : CREATE TABLE STRING . AS IDENT 
+
+	AS	shift 71
+
+
+	.	error
+
+
+state 52:
+
+	update : UPDATE IDENT SET . atribuicoes where_exp 
+
+	IDENT	shift 73
+
+	atribuicoes	goto 72
+
+	.	error
+
+
+state 53:
+
+	delete : DELETE FROM IDENT . where_exp 
+
+	WHERE	shift 75
+
+	where_exp	goto 74
+
+	.	reduce by rule 59
+
+
+state 54:
+
+	atributo : exp AS . IDENT 
+
+	IDENT	shift 76
+
+
+	.	error
+
+
+state 55:
+
+	atributos : atributo VIRG . atributos 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 33
+
+	atributos	goto 77
+	atributo	goto 31
+	exp	goto 30
+
+	.	error
+
+
+state 56:
+
+	select : SELECT atributos FROM . IDENT where_exp 
+
+	IDENT	shift 78
+
+
+	.	error
+
+
+state 57:
+
+	exp : PAREN_E exp . PAREN_D op_bin PAREN_E exp PAREN_D 
+
+	PAREN_D	shift 79
+
+
+	.	error
+
+
+state 58:
+
+	exp : NOT PAREN_E . exp PAREN_D 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	exp	goto 80
+
+	.	error
+
+
+state 59:
+
+	select : SELECT MULT FROM . IDENT where_exp 
+
+	IDENT	shift 81
+
+
+	.	error
+
+
+state 60:
+
+	ifelse : IF exp CHAVE_E . bloco CHAVE_D 
+	ifelse : IF exp CHAVE_E . bloco CHAVE_D ELSE CHAVE_E bloco CHAVE_D 
+
+	WHILE	shift 21
+	IF	shift 20
+	SELECT	shift 19
+	DELETE	shift 18
+	UPDATE	shift 17
+	CREATE	shift 16
+	IDENT	shift 15
+
+	bloco	goto 82
+	comando	goto 13
+	atrib	goto 12
+	while_com	goto 11
+	ifelse	goto 10
+	update	goto 9
+	delete	goto 8
+	create	goto 7
+	select	goto 6
+
+	.	error
+
+
+state 61:
+
+	while_com : WHILE exp CHAVE_E . bloco CHAVE_D 
+
+	WHILE	shift 21
+	IF	shift 20
+	SELECT	shift 19
+	DELETE	shift 18
+	UPDATE	shift 17
+	CREATE	shift 16
+	IDENT	shift 15
+
+	bloco	goto 83
+	comando	goto 13
+	atrib	goto 12
+	while_com	goto 11
+	ifelse	goto 10
+	update	goto 9
+	delete	goto 8
+	create	goto 7
+	select	goto 6
+
+	.	error
+
+
+state 62:
+
+	def_var : VAR declaracao PONT_VIRG def_var .  (reduce by rule 10)
+
+
+
+	.	reduce by rule 10
+
+
+state 63:
+
+	declaracao : IDENT DOIS_PONT tipoS .  (reduce by rule 11)
+
+
+
+	.	reduce by rule 11
+
+
+state 64:
+
+	declaracao : IDENT DOIS_PONT IDENT .  (reduce by rule 12)
+
+
+
+	.	reduce by rule 12
+
+
+state 65:
+
+	tipoS : T_BOOL .  (reduce by rule 8)
+
+
+
+	.	reduce by rule 8
+
+
+state 66:
+
+	tipoS : T_STRING .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 67:
+
+	tipoS : T_REAL .  (reduce by rule 6)
+
+
+
+	.	reduce by rule 6
+
+
+state 68:
+
+	tipoS : T_INT .  (reduce by rule 5)
+
+
+
+	.	reduce by rule 5
+
+
+state 69:
+
+	def_tipo : STRUCT IDENT CHAVE_E campos CHAVE_D .  (reduce by rule 1)
+	def_tipo : STRUCT IDENT CHAVE_E campos CHAVE_D . def_tipo 
+
+	STRUCT	shift 2
+
+	def_tipo	goto 84
+
+	.	reduce by rule 1
+
+
+state 70:
+
+	campos : IDENT DOIS_PONT . tipoS PONT_VIRG 
+	campos : IDENT DOIS_PONT . tipoS PONT_VIRG campos 
+
+	T_INT	shift 68
+	T_REAL	shift 67
+	T_STRING	shift 66
+	T_BOOL	shift 65
+
+	tipoS	goto 85
+
+	.	error
+
+
+state 71:
+
+	create : CREATE TABLE STRING AS . IDENT 
+
+	IDENT	shift 86
+
+
+	.	error
+
+
+state 72:
+
+	update : UPDATE IDENT SET atribuicoes . where_exp 
+
+	WHERE	shift 75
+
+	where_exp	goto 87
+
+	.	reduce by rule 59
+
+
+state 73:
+
+	atribuicoes : IDENT . IGUAL exp 
+	atribuicoes : IDENT . IGUAL exp VIRG atribuicoes 
+
+	IGUAL	shift 88
+
+
+	.	error
+
+
+state 74:
+
+	delete : DELETE FROM IDENT where_exp .  (reduce by rule 57)
+
+
+
+	.	reduce by rule 57
+
+
+state 75:
+
+	where_exp : WHERE . condicoes 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	condicoes	goto 90
+	exp	goto 89
+
+	.	error
+
+
+state 76:
+
+	atributo : exp AS IDENT .  (reduce by rule 52)
+
+
+
+	.	reduce by rule 52
+
+
+state 77:
+
+	atributos : atributo VIRG atributos .  (reduce by rule 50)
+
+
+
+	.	reduce by rule 50
+
+
+state 78:
+
+	select : SELECT atributos FROM IDENT . where_exp 
+
+	WHERE	shift 75
+
+	where_exp	goto 91
+
+	.	reduce by rule 59
+
+
+state 79:
+
+	exp : PAREN_E exp PAREN_D . op_bin PAREN_E exp PAREN_D 
+
+	MAIS	shift 105
+	MENOS	shift 104
+	MULT	shift 103
+	DIV	shift 102
+	MOD	shift 101
+	AND	shift 100
+	OR	shift 99
+	IGUAL	shift 98
+	DIF	shift 97
+	MENOR	shift 96
+	MAIOR	shift 95
+	MAIGUAL	shift 94
+	MENIGUAL	shift 93
+
+	op_bin	goto 92
+
+	.	error
+
+
+state 80:
+
+	exp : NOT PAREN_E exp . PAREN_D 
+
+	PAREN_D	shift 106
+
+
+	.	error
+
+
+state 81:
+
+	select : SELECT MULT FROM IDENT . where_exp 
+
+	WHERE	shift 75
+
+	where_exp	goto 107
+
+	.	reduce by rule 59
+
+
+state 82:
+
+	ifelse : IF exp CHAVE_E bloco . CHAVE_D 
+	ifelse : IF exp CHAVE_E bloco . CHAVE_D ELSE CHAVE_E bloco CHAVE_D 
+
+	CHAVE_D	shift 108
+
+
+	.	error
+
+
+state 83:
+
+	while_com : WHILE exp CHAVE_E bloco . CHAVE_D 
+
+	CHAVE_D	shift 109
+
+
+	.	error
+
+
+state 84:
+
+	def_tipo : STRUCT IDENT CHAVE_E campos CHAVE_D def_tipo .  (reduce by rule 2)
+
+
+
+	.	reduce by rule 2
+
+
+state 85:
+
+	campos : IDENT DOIS_PONT tipoS . PONT_VIRG 
+	campos : IDENT DOIS_PONT tipoS . PONT_VIRG campos 
+
+	PONT_VIRG	shift 110
+
+
+	.	error
+
+
+state 86:
+
+	create : CREATE TABLE STRING AS IDENT .  (reduce by rule 53)
+
+
+
+	.	reduce by rule 53
+
+
+state 87:
+
+	update : UPDATE IDENT SET atribuicoes where_exp .  (reduce by rule 54)
+
+
+
+	.	reduce by rule 54
+
+
+state 88:
+
+	atribuicoes : IDENT IGUAL . exp 
+	atribuicoes : IDENT IGUAL . exp VIRG atribuicoes 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	exp	goto 111
+
+	.	error
+
+
+state 89:
+
+	condicoes : exp .  (reduce by rule 60)
+	condicoes : exp . VIRG condicoes 
+
+	VIRG	shift 112
+
+
+	.	reduce by rule 60
+
+
+state 90:
+
+	where_exp : WHERE condicoes .  (reduce by rule 58)
+
+
+
+	.	reduce by rule 58
+
+
+state 91:
+
+	select : SELECT atributos FROM IDENT where_exp .  (reduce by rule 47)
+
+
+
+	.	reduce by rule 47
+
+
+state 92:
+
+	exp : PAREN_E exp PAREN_D op_bin . PAREN_E exp PAREN_D 
+
+	PAREN_E	shift 113
+
+
+	.	error
+
+
+state 93:
+
+	op_bin : MENIGUAL .  (reduce by rule 46)
+
+
+
+	.	reduce by rule 46
+
+
+state 94:
+
+	op_bin : MAIGUAL .  (reduce by rule 45)
+
+
+
+	.	reduce by rule 45
+
+
+state 95:
+
+	op_bin : MAIOR .  (reduce by rule 43)
+
+
+
+	.	reduce by rule 43
+
+
+state 96:
+
+	op_bin : MENOR .  (reduce by rule 44)
+
+
+
+	.	reduce by rule 44
+
+
+state 97:
+
+	op_bin : DIF .  (reduce by rule 42)
+
+
+
+	.	reduce by rule 42
+
+
+state 98:
+
+	op_bin : IGUAL .  (reduce by rule 41)
+
+
+
+	.	reduce by rule 41
+
+
+state 99:
+
+	op_bin : OR .  (reduce by rule 40)
+
+
+
+	.	reduce by rule 40
+
+
+state 100:
+
+	op_bin : AND .  (reduce by rule 39)
+
+
+
+	.	reduce by rule 39
+
+
+state 101:
+
+	op_bin : MOD .  (reduce by rule 38)
+
+
+
+	.	reduce by rule 38
+
+
+state 102:
+
+	op_bin : DIV .  (reduce by rule 37)
+
+
+
+	.	reduce by rule 37
+
+
+state 103:
+
+	op_bin : MULT .  (reduce by rule 36)
+
+
+
+	.	reduce by rule 36
+
+
+state 104:
+
+	op_bin : MENOS .  (reduce by rule 35)
+
+
+
+	.	reduce by rule 35
+
+
+state 105:
+
+	op_bin : MAIS .  (reduce by rule 34)
+
+
+
+	.	reduce by rule 34
+
+
+state 106:
+
+	exp : NOT PAREN_E exp PAREN_D .  (reduce by rule 29)
+
+
+
+	.	reduce by rule 29
+
+
+state 107:
+
+	select : SELECT MULT FROM IDENT where_exp .  (reduce by rule 48)
+
+
+
+	.	reduce by rule 48
+
+
+state 108:
+
+	ifelse : IF exp CHAVE_E bloco CHAVE_D .  (reduce by rule 25)
+	ifelse : IF exp CHAVE_E bloco CHAVE_D . ELSE CHAVE_E bloco CHAVE_D 
+
+	ELSE	shift 114
+
+
+	.	reduce by rule 25
+
+
+state 109:
+
+	while_com : WHILE exp CHAVE_E bloco CHAVE_D .  (reduce by rule 24)
+
+
+
+	.	reduce by rule 24
+
+
+state 110:
+
+	campos : IDENT DOIS_PONT tipoS PONT_VIRG .  (reduce by rule 3)
+	campos : IDENT DOIS_PONT tipoS PONT_VIRG . campos 
+
+	IDENT	shift 47
+
+	campos	goto 115
+
+	.	reduce by rule 3
+
+
+state 111:
+
+	atribuicoes : IDENT IGUAL exp .  (reduce by rule 55)
+	atribuicoes : IDENT IGUAL exp . VIRG atribuicoes 
+
+	VIRG	shift 116
+
+
+	.	reduce by rule 55
+
+
+state 112:
+
+	condicoes : exp VIRG . condicoes 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	condicoes	goto 117
+	exp	goto 89
+
+	.	error
+
+
+state 113:
+
+	exp : PAREN_E exp PAREN_D op_bin PAREN_E . exp PAREN_D 
+
+	NOT	shift 39
+	PAREN_E	shift 38
+	INT	shift 37
+	REAL	shift 36
+	STRING	shift 35
+	BOOL	shift 34
+	IDENT	shift 42
+
+	exp	goto 118
+
+	.	error
+
+
+state 114:
+
+	ifelse : IF exp CHAVE_E bloco CHAVE_D ELSE . CHAVE_E bloco CHAVE_D 
+
+	CHAVE_E	shift 119
+
+
+	.	error
+
+
+state 115:
+
+	campos : IDENT DOIS_PONT tipoS PONT_VIRG campos .  (reduce by rule 4)
+
+
+
+	.	reduce by rule 4
+
+
+state 116:
+
+	atribuicoes : IDENT IGUAL exp VIRG . atribuicoes 
+
+	IDENT	shift 73
+
+	atribuicoes	goto 120
+
+	.	error
+
+
+state 117:
+
+	condicoes : exp VIRG condicoes .  (reduce by rule 61)
+
+
+
+	.	reduce by rule 61
+
+
+state 118:
+
+	exp : PAREN_E exp PAREN_D op_bin PAREN_E exp . PAREN_D 
+
+	PAREN_D	shift 121
+
+
+	.	error
+
+
+state 119:
+
+	ifelse : IF exp CHAVE_E bloco CHAVE_D ELSE CHAVE_E . bloco CHAVE_D 
+
+	WHILE	shift 21
+	IF	shift 20
+	SELECT	shift 19
+	DELETE	shift 18
+	UPDATE	shift 17
+	CREATE	shift 16
+	IDENT	shift 15
+
+	bloco	goto 122
+	comando	goto 13
+	atrib	goto 12
+	while_com	goto 11
+	ifelse	goto 10
+	update	goto 9
+	delete	goto 8
+	create	goto 7
+	select	goto 6
+
+	.	error
+
+
+state 120:
+
+	atribuicoes : IDENT IGUAL exp VIRG atribuicoes .  (reduce by rule 56)
+
+
+
+	.	reduce by rule 56
+
+
+state 121:
+
+	exp : PAREN_E exp PAREN_D op_bin PAREN_E exp PAREN_D .  (reduce by rule 28)
+
+
+
+	.	reduce by rule 28
+
+
+state 122:
+
+	ifelse : IF exp CHAVE_E bloco CHAVE_D ELSE CHAVE_E bloco . CHAVE_D 
+
+	CHAVE_D	shift 123
+
+
+	.	error
+
+
+state 123:
+
+	ifelse : IF exp CHAVE_E bloco CHAVE_D ELSE CHAVE_E bloco CHAVE_D .  (reduce by rule 26)
+
+
+
+	.	reduce by rule 26
+
+
+state 124:
+
+
+	EOF	accept
+
+
+	.	error
+
+118 of 317 action table entries left after compaction
+80 goto table entries

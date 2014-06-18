@@ -1,0 +1,2 @@
+Skeleton 5
+ae"XsqlLrValsFun"i2aдўToken"gp1c"TOKEN"f±яjh2aдўParserData"h7aдўHeader"и0aдўLrTable"gp2яяЃCaяgpя(bезр±яЃf6d"Char"Cd"List"d"String"d"General"яЃd"Array"Nbезр±я?aдўMlyValue"яЃad"EC"h2яЃ&bя‚ж±я‚%ad"Actions"h2bя‚f3d"XSQLLib"яЃя‚%яѓNaдўTokens"jяЃзр±гўXsql_TOKENS"h2aя/gp1c"PARSER_DATA"aяѓ/яѓ<

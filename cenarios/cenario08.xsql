@@ -1,0 +1,10 @@
+struct Aluno {
+  nome: string;
+  idade: int;
+}
+
+var professor: Aluno;
+professor = "cenarios/professores.xml";
+
+delete from professor where (nome) = ("Rafael");
+select nome, idade from professor;

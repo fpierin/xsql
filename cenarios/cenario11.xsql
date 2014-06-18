@@ -1,0 +1,12 @@
+struct Contact {
+  Id: int;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Username: string;
+}
+
+var contact : Contact;
+contact = “contact.xml”;
+
+create Contact (1, "Felipe", "Pierin", "fpierin@ime.usp.br", "fpierin");

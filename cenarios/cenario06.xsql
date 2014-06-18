@@ -1,0 +1,19 @@
+struct Aluno {
+  nome: string;
+  idade: int;
+}
+
+var aluno: Aluno;
+var i: int;
+
+aluno = "cenarios/alunos.xml";
+
+i = 0;
+if (i) < (10)
+{
+        while (i) <> (1)
+        {
+					select i, nome, idade from aluno;
+					i = (i) + (1);
+        };
+};

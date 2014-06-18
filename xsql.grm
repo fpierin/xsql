@@ -1,0 +1,184 @@
+
+
+%%
+%eop EOF
+%pos int
+%name Xsql
+
+%noshift EOF
+%value IDENT ("bogus")
+%verbose
+
+%term 	  MAIS | MENOS | MULT | DIV | MOD
+        | AND | OR | NOT 
+        | IGUAL | DIF | MENOR | MAIOR | MAIGUAL | MENIGUAL
+        | PAREN_E | PAREN_D | CHAVE_E | CHAVE_D
+        | DOIS_PONT | PONT_VIRG | VIRG
+        | T_INT | T_REAL | T_STRING | T_BOOL
+        | INT of int | REAL of real | STRING of string | BOOL of bool
+        | WHILE | IF | ELSE
+        | SELECT | DELETE | UPDATE | CREATE | TABLE
+        | FROM | WHERE | AS | SET
+        | VAR | FUNC | STRUCT
+        | IDENT of string
+	| EOF
+
+%nonterm  start		of (Estado)
+	| def_tipo	of (Estado -> Estado)
+	| def_var	of (Estado -> Estado)
+	| tipoS		of (TipoBasico)
+	| declaracao	of (Estado -> Estado)
+	| campos	of ((string * TipoBasico) list)
+	| def_func	of (Estado -> Estado)
+	| bloco		of (Estado -> Estado)
+	| comando	of (Estado -> Estado)
+	| atrib		of (Estado -> Estado)
+	| while_com	of (Estado -> Estado)
+	| ifelse	of (Estado -> Estado)
+	| select_com	of (Estado -> Estado)
+	| update	of (Estado -> Estado)
+	| atribuicoes	of ((string * (Estado -> Valor)) list)
+	| delete	of (Estado -> Estado)
+	| create	of (Estado -> Estado)
+	| select 	of (Estado -> ConteudoTabela)
+	| atributos	of ((string * (Estado -> Valor)) list)
+	| atributo	of  (string * (Estado -> Valor))
+	| where_exp 	of (string * Estado -> ConteudoTabela * ConteudoTabela)
+	| condicoes	of (Estado -> Valor)
+	| exp 		of (Estado -> Valor)
+	| op_bin	of (Valor * Valor -> Valor)
+%%
+
+start:	  def_tipo def_var bloco	(bloco (def_var (def_tipo ([]))))
+
+
+
+def_tipo: STRUCT IDENT CHAVE_E campos CHAVE_D	(fn x => XSQLLib.addTipo(IDENT, campos, x))
+	| STRUCT IDENT CHAVE_E campos CHAVE_D def_tipo	(fn x => def_tipo (XSQLLib.addTipo(IDENT, campos, x)))
+
+campos:	  IDENT DOIS_PONT tipoS PONT_VIRG	 ([(IDENT,tipoS)])
+	| IDENT DOIS_PONT tipoS PONT_VIRG campos ((IDENT,tipoS) :: campos)
+
+tipoS:	  T_INT				(TInt)
+	| T_REAL			(TReal)
+	| T_STRING			(TString)
+	| T_BOOL			(TBool)
+
+
+
+def_var: VAR declaracao PONT_VIRG		(declaracao)
+	| VAR declaracao PONT_VIRG def_var	(fn x => def_var(declaracao x))
+
+declaracao: IDENT DOIS_PONT tipoS		(fn x => XSQLLib.addVarS(IDENT, tipoS, x))
+	|   IDENT DOIS_PONT IDENT		(fn x => XSQLLib.addVarT(IDENT1, IDENT2, x))
+
+
+
+bloco:    comando PONT_VIRG		(comando)
+	| comando PONT_VIRG bloco	(fn x => bloco (comando x))
+
+
+
+comando:  atrib				(atrib)
+	| while_com			(while_com)
+	| ifelse			(ifelse)
+	| select			(fn x => #1 (x, XSQLLib.printTable(select x)))
+	| create			(create)
+	| update			(update)
+	| delete			(delete)
+
+
+
+atrib:	  IDENT IGUAL exp		(fn x => XSQLLib.atribuicao(IDENT, exp x, x))
+	| IDENT IGUAL select		(fn x => #1 (x,
+					XSQLLib.atribSelect(IDENT, select x, x)))
+
+
+
+while_com:  WHILE exp CHAVE_E bloco CHAVE_D	(fn x => XSQLLib.enquanto(exp,bloco,x))
+
+
+
+ifelse:	  IF exp CHAVE_E bloco CHAVE_D	(fn x => XSQLLib.condicao(exp x, bloco, (fn x => x), x))
+	| IF exp CHAVE_E bloco CHAVE_D
+		ELSE CHAVE_E bloco CHAVE_D (fn x => XSQLLib.condicao(exp x,bloco1,bloco2,x))
+
+
+
+exp:	  IDENT							(fn x => XSQLLib.valorar(IDENT, x))
+	| PAREN_E exp PAREN_D op_bin PAREN_E exp PAREN_D	(fn x => op_bin(exp1 x, exp2 x))
+	| NOT PAREN_E exp PAREN_D				(fn x => XSQLLib.negar(exp x))
+	| INT							(fn _ => VInt INT)
+	| REAL							(fn _ => VReal REAL)
+	| STRING						(fn _ => VString STRING)
+	| BOOL							(fn _ => VBool BOOL)
+
+
+op_bin:	  MAIS				(XSQLLib.somar)
+	| MENOS				(XSQLLib.subtrair)
+	| MULT				(XSQLLib.multiplicar)
+	| DIV				(XSQLLib.dividir)
+	| MOD				(XSQLLib.modulo)
+	| AND				(XSQLLib.eLogico)
+	| OR				(XSQLLib.ouLogico)
+	| IGUAL				(XSQLLib.igual)
+	| DIF				(fn (x,y) => XSQLLib.negar (XSQLLib.igual (x,y)))
+	| MAIOR				(XSQLLib.maior)
+	| MENOR				(XSQLLib.menor)
+	| MAIGUAL			(fn (x,y) => XSQLLib.ouLogico (XSQLLib.maior (x,y), XSQLLib.igual (x,y)))
+	| MENIGUAL			(fn (x,y) => XSQLLib.ouLogico (XSQLLib.menor (x,y), XSQLLib.igual (x,y)))
+
+
+
+
+
+select:   SELECT atributos FROM IDENT where_exp (fn x =>
+					let
+						val (tabFiltrada,_) = where_exp (IDENT, x)
+					in
+						XSQLLib.select (tabFiltrada, atributos, x)
+					end)
+	| SELECT MULT FROM IDENT where_exp (fn x =>
+					let
+						val (tabFiltrada,_) = where_exp (IDENT, x)
+					in
+						tabFiltrada
+					end)
+
+atributos: atributo			([atributo])
+	|  atributo VIRG atributos	(atributo::atributos)
+
+atributo:  IDENT			((IDENT, fn x => XSQLLib.valorar(IDENT, x)))
+	|  exp AS IDENT			((IDENT, exp))
+
+
+
+
+create: CREATE TABLE STRING AS IDENT		(fn x => #1 (x,
+						XSQLLib.create (STRING, IDENT, x)))
+
+
+
+update: UPDATE IDENT SET atribuicoes where_exp	(fn x => #1 (x,
+						XSQLLib.update (IDENT, where_exp (IDENT, x), atribuicoes, x)))
+
+atribuicoes: IDENT IGUAL exp			([(IDENT,exp)])
+	|    IDENT IGUAL exp VIRG atribuicoes	((IDENT,exp)::atribuicoes)
+
+
+
+delete: DELETE FROM IDENT where_exp		(fn x =>
+					let
+						val (_,tabFiltrada) = where_exp (IDENT, x)
+						val _ = XSQLLib.delete (IDENT, tabFiltrada, x)
+					in
+						x
+					end)
+
+
+
+where_exp: WHERE condicoes		(fn (nomeTab,x) => XSQLLib.filtrar (XSQLLib.leTabela(nomeTab, x), condicoes, x))
+	|				(fn (nomeTab,x) => (XSQLLib.leTabela(nomeTab, x), []))
+
+condicoes: exp				(exp)
+	|  exp VIRG condicoes		(fn x => XSQLLib.eLogico (exp x, condicoes x))

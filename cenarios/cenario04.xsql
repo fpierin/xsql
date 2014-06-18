@@ -1,0 +1,10 @@
+struct Aluno {
+  nome: string;
+  idade: int;
+}
+
+var aluno: Aluno;
+aluno = "cenarios/alunos.xml";
+
+select idade from aluno where (nome) = ("Rafael");
+

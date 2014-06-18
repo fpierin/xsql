@@ -1,0 +1,27 @@
+struct Contact {
+  Id: int;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Username: string;
+}
+
+var contact : Contact;
+contact = “contact.xml”;
+
+struct Location {
+  int Id;
+  string Address;
+  int Distance;
+  string Latitude;
+  string Longitude;
+  int Bikes;
+  int Dockings;
+}
+
+Contact contact = “contact.xml”
+
+select c.FirstName, a.Address
+  from Contact c
+  join Location l on l.Id = c.Id
+

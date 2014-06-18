@@ -1,0 +1,12 @@
+struct Contact {
+  Id: int;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Username: string;
+}
+
+var contact : Contact;
+contact = "cenarios/contacts.xml";
+
+select Id, FirstName, LastName, Email, Username from contact;

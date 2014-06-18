@@ -1,0 +1,22 @@
+struct Contact {
+  int Id;
+  string FirstName;
+  string LastName;
+  string Email;
+  string Username;
+}
+
+Contact contact = “contact.xml”
+
+function numName(id: int, name: string): string {
+	id + name;
+};
+
+function fullName(name: string, surname: string): string {
+	name + surname;
+};
+
+select numName(Id, fullName(FirstName,LastName))
+  from contact
+ order by Id
+

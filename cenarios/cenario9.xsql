@@ -1,0 +1,14 @@
+struct Contact {
+  Id: int;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Username: string;
+}
+
+var contact : Contact;
+contact = “contact.xml”;
+
+update contact
+   set email = "fpierin@ime.usp.br"
+ where Id = 1039;

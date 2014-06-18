@@ -1,0 +1,9 @@
+struct Aluno {
+  nome: string;
+  idade: int;
+}
+
+var professor: Aluno;
+professor = "cenarios/professores.xml";
+
+update professor set nome = "Ana" where (nome) = ("Felipe");

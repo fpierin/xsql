@@ -1,0 +1,13 @@
+struct Contact {
+  Id: int;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Username: string;
+}
+
+var contact : Contact;
+contact = "cenarios/contacts.xml";
+
+select Username from contact 
+ where Email = "Zard_Miana@tishabov.us";

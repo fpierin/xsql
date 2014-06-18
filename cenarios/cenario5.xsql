@@ -1,0 +1,17 @@
+struct Contact {
+  int Id;
+  string FirstName;
+  string LastName;
+  string Email;
+  string Username;
+}
+
+Contact contact = “contact.xml”
+
+function fullName(name: string, surname: string): string {
+	name + surname;
+};
+
+select fullName(FirstName,LastName)
+  from contact
+ where Email = "Zard_Miana@tishabov.us"

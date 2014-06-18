@@ -1,0 +1,10 @@
+struct Artista {
+  nome: string;
+  foto: string;
+  pais: string;
+}
+
+var artista : Artista;
+artista = "cenarios/artistas.xml";
+
+select nome, pais from artista;

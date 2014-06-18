@@ -1,0 +1,16 @@
+struct Aluno {
+  nome: string;
+  idade: int;
+}
+
+var aluno: Aluno;
+var professor: string;
+var i: int;
+
+aluno = "cenarios/alunos.xml";
+professor = "Ana";
+
+i = (i) + (30);
+
+select nome, (idade) + (i) as novaIdade, professor from aluno;
+
